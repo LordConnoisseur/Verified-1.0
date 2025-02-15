@@ -6,11 +6,16 @@ export default function LiveMonitoring() {
   const [streams, setStreams] = useState([]);
 
   useEffect(() => {
-    // Fetch live streams from the backend
-    fetch('/api/streams')
-      .then(response => response.json())
-      .then(data => setStreams(data))
-      .catch(error => console.error('Error fetching streams:', error));
+    const fetchStreams = () => {
+      fetch('http://localhost:5000/api/streams')
+        .then(response => response.json())
+        .then(data => setStreams(data))
+        .catch(error => console.error('Error fetching streams:', error));
+    };
+
+    fetchStreams();
+    const interval = setInterval(fetchStreams, 5000); // Fetch every 5 seconds
+    return () => clearInterval(interval);
   }, []);
 
   return (
