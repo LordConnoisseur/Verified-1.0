@@ -12,6 +12,7 @@ export default function Navbar() {
           <Link to="/live" className="navbar-link">Live Monitoring</Link>
           <Link to="/alerts" className="navbar-link">Alerts</Link>
           <Link to="/sources" className="navbar-link">Sources</Link>
+          <Link to="/settings" className="navbar-link">Settings</Link>
         </div>
       </div>
     </nav>

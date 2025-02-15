@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AnalysisChart from '../components/AnalysisChart';
 import SummaryCard from '../components/SummaryCard';
 import '../assets/styles/dashboard.css';
 
 export default function Dashboard() {
-  const stats = [
-    { title: "Processed Streams", value: "1,234", trend: "+12%" },
-    { title: "Verified Claims", value: "892", trend: "+8%" },
-    { title: "Active Alerts", value: "23", trend: "-4%" },
-    { title: "System Health", value: "98%", trend: "Stable" }
-  ];
+  const [stats, setStats] = useState([]);
+
+  useEffect(() => {
+    // Fetch stats from the backend
+    fetch('/api/stats')
+      .then(response => response.json())
+      .then(data => setStats(data))
+      .catch(error => console.error('Error fetching stats:', error));
+  }, []);
 
   return (
     <div className="dashboard">

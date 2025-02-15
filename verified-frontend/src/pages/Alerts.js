@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AlertFeed from '../components/AlertFeed';
 import '../assets/styles/alerts.css';
 
 export default function Alerts() {
-  const alerts = [
-    { title: "Misinformation Detected", description: "Potential false claim about election results.", timestamp: "10:45 AM" },
-    { title: "Source Unverified", description: "Unverified source cited in live broadcast.", timestamp: "9:30 AM" }
-  ];
+  const [alerts, setAlerts] = useState([]);
+
+  useEffect(() => {
+    // Fetch alerts from the backend
+    fetch('/api/alerts')
+      .then(response => response.json())
+      .then(data => setAlerts(data))
+      .catch(error => console.error('Error fetching alerts:', error));
+  }, []);
 
   return (
     <div className="alerts-page">

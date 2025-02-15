@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import LiveStreamCard from '../components/LiveStreamCard';
 import '../assets/styles/livemonitoring.css';
 
 export default function LiveMonitoring() {
-  const streams = [
-    { id: 1, title: "News Channel 24", status: "Analyzing", confidence: 92 },
-    { id: 2, title: "Global Update", status: "Verified", confidence: 98 },
-    { id: 3, title: "Breaking News", status: "Flagged", confidence: 65 }
-  ];
+  const [streams, setStreams] = useState([]);
+
+  useEffect(() => {
+    // Fetch live streams from the backend
+    fetch('/api/streams')
+      .then(response => response.json())
+      .then(data => setStreams(data))
+      .catch(error => console.error('Error fetching streams:', error));
+  }, []);
 
   return (
     <div className="live-monitoring">
