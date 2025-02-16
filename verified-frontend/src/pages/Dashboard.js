@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import AnalysisChart from '../components/AnalysisChart';
 import SummaryCard from '../components/SummaryCard';
+import BlockchainLog from '../components/BlockchainLog';
 import '../assets/styles/dashboard.css';
 
 export default function Dashboard() {
   const [stats, setStats] = useState([]);
+  const [blockchainLogs, setBlockchainLogs] = useState([]);
 
   useEffect(() => {
-    // Fetch stats from the backend
-    fetch('/api/stats')
+    // Fetch stats
+    fetch('http://localhost:5000/api/stats')
       .then(response => response.json())
       .then(data => setStats(data))
       .catch(error => console.error('Error fetching stats:', error));
+
+    // Fetch blockchain logs
+    fetch('http://localhost:5000/api/blockchain')
+      .then(response => response.json())
+      .then(data => setBlockchainLogs(data))
+      .catch(error => console.error('Error fetching blockchain logs:', error));
   }, []);
 
   return (
@@ -27,6 +35,10 @@ export default function Dashboard() {
       <div className="chart-container">
         <h2 className="chart-title">Verification Trends</h2>
         <AnalysisChart />
+      </div>
+
+      <div className="blockchain-container">
+        <BlockchainLog logs={blockchainLogs} />
       </div>
     </div>
   );

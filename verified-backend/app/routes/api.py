@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from app.models.stream import Stream
 from app.models.alert import Alert
 from app.models.source import Source
+from app.models.blockchain import Blockchain
 from app import db
 
 api_bp = Blueprint('api', __name__)
@@ -9,7 +10,7 @@ api_bp = Blueprint('api', __name__)
 # Stream Routes
 @api_bp.route('/streams', methods=['GET'])
 def get_streams():
-    streams = Stream.query.all()
+    streams = Stream.query.order_by(Stream.id.desc()).all()
     return jsonify([{
         'id': stream.id,
         'title': stream.title,
@@ -84,3 +85,14 @@ def get_stats():
         {'title': 'System Health', 'value': '98%', 'trend': 'Stable'}
     ]
     return jsonify(stats)
+
+@api_bp.route('/blockchain', methods=['GET'])
+def get_blockchain():
+    blocks = Blockchain.query.order_by(Blockchain.timestamp.desc()).all()
+    return jsonify([{
+        'index': block.id,
+        'previous_hash': block.previous_hash,
+        'data': block.data,
+        'timestamp': block.timestamp,
+        'hash': block.hash
+    } for block in blocks])

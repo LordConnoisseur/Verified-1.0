@@ -3,7 +3,8 @@ from transformers import BertForSequenceClassification, BertTokenizer
 import torch
 import json
 from app.models.stream import Stream
-from app import create_app, db  # Import create_app and db
+from app.utils.blockchain import BlockchainLedger  # Import the BlockchainLedger class
+from app import create_app, db
 
 # Load the trained model and tokenizer
 model = BertForSequenceClassification.from_pretrained("misinformation-detection-model")
@@ -11,6 +12,9 @@ tokenizer = BertTokenizer.from_pretrained("misinformation-detection-model")
 
 # Initialize Flask app
 app = create_app()
+
+# Initialize BlockchainLedger with the Flask app
+blockchain = BlockchainLedger(app)
 
 # Initialize Kafka consumer
 consumer = KafkaConsumer(
@@ -48,5 +52,8 @@ with app.app_context():  # Create a Flask application context
         )
         db.session.add(new_stream)
         db.session.commit()
+
+        # Add verification decision to the blockchain
+        blockchain.add_block(f"Stream ID {stream['id']}: {analyzed_stream['status']}")
         
         print(f"Analyzed stream: {analyzed_stream}")
